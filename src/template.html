@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TrustGate Demo</title>
+<style>
+:root{--bg:#0b0f14;--card:#111820;--card2:#0e141b;--bd:#1e2733;--tx:#f4f6f8;--mu:#a6b0bc;--am:#ffb500;--gr:#3ddc97;--rd:#f0625d;--bl:#6cb6ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 "Segoe UI",system-ui,Arial,sans-serif;padding:20px clamp(16px,3vw,40px) 40px}
+:focus-visible{outline:2px solid var(--am);outline-offset:2px}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:flex-end;border-bottom:1px solid var(--bd);padding-bottom:14px;margin-bottom:14px}
+h1{margin:0;font-size:28px}h1 span{color:var(--am)}h1 small{font-size:13px;color:var(--mu);font-weight:400;margin-left:6px}
+.sub0{color:var(--mu);font-size:14px;max-width:62ch}
+.warn{font-size:12px;color:var(--am);border:1px solid #5a4300;border-radius:8px;padding:6px 10px;max-width:48ch}
+.team{color:var(--mu);font-size:12px;margin-top:4px}
+#tour{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px}
+#tour .lbl{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--am);font-weight:700}
+#tourcap{color:var(--mu);font-size:13px;min-height:20px;margin:0 0 14px}
+#stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+@media(max-width:600px){#stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px 12px;display:flex;flex-direction:column}
+.stat b{font-size:22px;color:var(--am);line-height:1.1}.stat span{font-size:12px;color:var(--mu)}
+.grid{display:grid;grid-template-columns:280px minmax(0,1fr) 330px;gap:16px;align-items:start}
+@media(max-width:1100px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px}
+.panel h2{margin:0 0 10px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--am)}
+#library{max-height:640px;overflow-y:auto;padding-right:4px;margin-bottom:8px}
+.doc{border:1px solid var(--bd);border-radius:10px;padding:8px 10px;margin-bottom:8px}
+.doc.superseded,.doc.draft{opacity:.65}
+.dh{display:flex;justify-content:space-between;gap:6px;align-items:flex-start}.dt{font-weight:600;font-size:14px}.dm{color:var(--mu);font-size:12px}
+.dsecs{margin:6px 0 0;padding:0;list-style:none;font-size:12px;color:var(--mu)}.dsecs li{margin:2px 0}
+.doc button{padding:2px 8px;font-size:11px;margin-top:6px}
+.tag{font-size:11px;border-radius:999px;padding:1px 8px;border:1px solid var(--bd);color:var(--mu);white-space:nowrap}
+.tag.verified,.tag.ruled,.tag.active{color:var(--gr);border-color:#1d6b4a}.tag.conflict,.tag.lowconf,.tag.stale,.tag.draft{color:var(--am);border-color:#6b5000}.tag.cannot,.tag.superseded{color:var(--rd);border-color:#7a2f2c}
+details>summary{cursor:pointer;color:var(--bl);font-size:13px}
+form{display:flex;gap:8px;flex-wrap:wrap}
+input[type=text],input[type=date],textarea{background:#0b0f14;border:1px solid var(--bd);color:var(--tx);border-radius:10px;padding:9px 11px;font:inherit;width:100%}
+textarea{min-height:96px;font-size:13px;resize:vertical}
+#qin{flex:1 1 240px;width:auto}
+label{font-size:12px;color:var(--mu);display:block;margin:6px 0 2px}
+button{background:var(--am);color:#0b0f14;border:0;border-radius:10px;padding:9px 14px;font:inherit;font-weight:600;cursor:pointer}
+button:hover{filter:brightness(1.1)}
+button.ghost,.qchip,.acts button,.tourbtn,.doc button{background:transparent;color:var(--tx);border:1px solid var(--bd);font-weight:500}
+.tourbtn{padding:5px 11px;font-size:13px;border-radius:999px}
+.tourbtn:hover,.qchip:hover,.acts button:hover,.doc button:hover{border-color:var(--am)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.row button{padding:6px 11px;font-size:13px}
+.msg{font-size:12px;color:var(--am);margin-top:6px;min-height:16px}
+.rcard{border:1px solid var(--bd);border-left:4px solid var(--mu);border-radius:12px;padding:14px;background:var(--card2);margin-top:12px}
+.rcard.verified,.rcard.ruled{border-left-color:var(--gr)}.rcard.conflict,.rcard.lowconf,.rcard.stale{border-left-color:var(--am)}.rcard.cannot{border-left-color:var(--rd)}
+.badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;border-radius:6px;padding:2px 8px;color:#0b0f14;background:var(--mu)}
+.badge.verified,.badge.ruled{background:var(--gr)}.badge.conflict,.badge.lowconf,.badge.stale{background:var(--am)}.badge.cannot{background:var(--rd)}
+.q{margin:8px 0 4px;color:var(--mu)}.ans{font-size:17px;font-weight:600;margin:6px 0}
+.sub{color:var(--mu);font-size:12px;margin:8px 0 4px}.meta{color:var(--mu);font-size:12px;margin-top:8px}
+.warns{margin:8px 0 0;padding:0;list-style:none}.warns li{font-size:13px;color:var(--am);margin:3px 0}.warns li:before{content:"\26A0  "}
+.esc{margin-top:10px;background:#1a1f27;border-radius:8px;padding:8px 10px;font-size:13px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.passage{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:8px 10px;margin:6px 0}
+.passage p{margin:6px 0 0}.pmeta{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:11px;color:var(--bl);border:1px solid #284a6b;border-radius:6px;padding:1px 6px}
+mark{background:#4a3a00;color:var(--tx);border-radius:3px;padding:0 2px}
+.trace{margin-top:12px;border-top:1px solid var(--bd);padding-top:10px}
+.stages{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:8px 0}
+@media(max-width:700px){.stages{grid-template-columns:1fr}}
+.stage{border:1px solid var(--bd);border-radius:10px;padding:6px 8px;background:var(--card)}
+.stage b{display:block;font-size:12px}.stage span{font-size:11px;color:var(--mu);display:block;line-height:1.3}
+.stage.pass{border-color:#1d6b4a}.stage.pass b{color:var(--gr)}.stage.flag{border-color:#6b5000}.stage.flag b{color:var(--am)}.stage.stop{border-color:#7a2f2c}.stage.stop b{color:var(--rd)}.stage.skip{opacity:.55}
+.bar{position:relative;height:10px;background:#1a2230;border-radius:6px;margin:14px 0 4px}
+.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:var(--am)}.bar i.g{background:var(--gr)}.bar i.r{background:var(--rd)}
+.bar u{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--tx);opacity:.7}
+.barl{position:relative;height:16px;font-size:11px;color:var(--mu)}.barl span{position:absolute;transform:translateX(-50%)}
+.terms{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}.terms span{font-size:12px;border-radius:6px;padding:1px 7px;border:1px solid var(--bd)}
+.terms .hit{color:var(--gr);border-color:#1d6b4a}.terms .miss{color:var(--rd);border-color:#7a2f2c}
+.ticket{border:1px solid var(--bd);border-radius:10px;padding:9px 10px;margin-bottom:8px}.ticket.resolved{opacity:.75}
+.thead{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.st{margin-left:auto;font-size:11px;color:var(--mu)}
+.tq{margin:4px 0}.tm{color:var(--mu);font-size:12px}
+.acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.acts button{padding:4px 9px;font-size:12px}
+.empty{color:var(--mu);font-size:13px;margin:0}
+.lrow{display:flex;gap:8px;font-size:12px;padding:4px 0;border-bottom:1px solid var(--bd);align-items:baseline}.lt{color:var(--mu);white-space:nowrap}.lq{min-width:0;overflow-wrap:anywhere}
+.tw{overflow-x:auto;margin-top:8px}table{border-collapse:collapse;width:100%;font-size:12px}th,td{border-bottom:1px solid var(--bd);padding:5px 8px;text-align:left}th{color:var(--mu)}
+.pass{color:var(--gr)}.fail{color:var(--rd)}tr.bad td{background:#2a1618}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}@media(max-width:1100px){.row2{grid-template-columns:1fr}}
+.evalgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:10px 0}
+.kpi{background:var(--card2);border:1px solid var(--bd);border-radius:10px;padding:8px 10px}.kpi b{font-size:20px;display:block}.kpi span{font-size:12px;color:var(--mu)}
+footer{margin-top:18px;color:var(--mu);font-size:12px}
+@media(prefers-reduced-motion:no-preference){.rcard{animation:in .25s ease-out}@keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>Trust<span>Gate</span><small>prototype demo</small></h1>
+  <div class="sub0">Answers only from approved documents, cites every claim, flags conflicts, and escalates uncertain cases to a human reviewer.</div>
+  <div class="team">BUILD2RISE 2026 &middot; Problem Statement 3: Trust Before Automation &middot; Team Data and Dollars</div></div>
+  <div class="warn">Synthetic data, fictional company. Rule-based and extractive: no generative AI, so it cannot invent policy text. A concept demo, not a production system.</div>
+</header>
+
+<div id="tour"><span class="lbl">Guided tour</span></div>
+<p id="tourcap">Click a scenario to see how TrustGate behaves, or type your own question below.</p>
+<div id="stats" aria-live="polite"></div>
+
+<div class="grid">
+  <section class="panel" aria-label="Approved library">
+    <h2>Document library</h2>
+    <div id="library"></div>
+    <details id="adddoc"><summary>Add a document</summary>
+      <form id="addform" style="display:block">
+        <label for="dtitle">Title</label><input type="text" id="dtitle" maxlength="60">
+        <div class="row" style="margin:0"><div style="flex:1;min-width:80px"><label for="dver">Version</label><input type="text" id="dver" value="v1" maxlength="8"></div>
+        <div style="flex:2;min-width:120px"><label for="ddate">Effective date</label><input type="date" id="ddate"></div></div>
+        <label for="dtext">Sections, one per line, as <code>1.1: text</code></label><textarea id="dtext" maxlength="3000"></textarea>
+        <div class="row"><button type="submit">Add to library</button><button type="button" class="ghost" id="dexample">Fill example</button></div>
+        <div class="msg" id="dmsg" role="status"></div>
+      </form>
+    </details>
+  </section>
+
+  <section class="panel" aria-label="Ask a question">
+    <h2>Ask a policy question</h2>
+    <form id="askform"><input type="text" id="qin" placeholder="e.g. How many leave days can I carry over?" autocomplete="off" aria-label="Your question"><button type="submit">Ask</button></form>
+    <div id="chips" class="row"></div>
+    <div id="result" aria-live="polite"></div>
+  </section>
+
+  <section class="panel" aria-label="Reviewer queue">
+    <h2>Reviewer queue</h2><div id="queue"></div>
+    <div id="rulings"></div>
+  </section>
+</div>
+
+<div class="row2">
+  <section class="panel"><h2>Audit log</h2><div id="log"></div>
+    <div class="row"><button class="ghost" id="exportbtn">Export log (CSV)</button></div></section>
+  <section class="panel"><h2>Evaluation</h2>
+    <div class="row" style="margin-top:0"><button id="evalbtn">Run evaluation</button><button id="resetbtn" class="ghost">Reset demo</button></div>
+    <div id="evalout"></div></section>
+</div>
+<footer>All documents are invented for this demo. Questions never leave your browser: there is no server and no network call.</footer>
+<script>/*DATA*/</script>
+<script>/*ENGINE*/</script>
+<script>/*APP*/</script>
+</body>
+</html>
