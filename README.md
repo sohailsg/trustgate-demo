@@ -5,7 +5,7 @@ Team: Data and Dollars (Sohail Ahmed, FORE School of Management).
 
 TrustGate answers questions only from approved documents, cites the exact source passage, flags conflicting or stale sources, and escalates uncertain cases to a human reviewer.
 
-**Live demo:** LIVE_DEMO_URL
+**Live demo:** https://sohailsg.github.io/trustgate-demo/
 
 ## What the prototype does
 - Retrieves from a library of 14 synthetic policy documents (active, superseded and draft).
